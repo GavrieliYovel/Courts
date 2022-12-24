@@ -28,5 +28,16 @@ exports.usersDbController = {
             else
                 res.status(404).send("Error saving user");
         }
+    },
+    getUserByMail(req, res) {
+         User.findOne({'email': req.params.email})
+            .then(result => {
+                if (result)
+                    res.send(result);
+                else
+                    res.send("The email does not exist, try again");
+            })
+            .catch(err => console.log(err));
+
     }
 }
