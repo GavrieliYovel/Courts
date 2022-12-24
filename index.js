@@ -3,6 +3,8 @@ require('dotenv').config();
 const cors = require('cors');
 require('./dbConnection');
 const { usersRouter } = require("./routers/usersRouter");
+const { courtsRouter } = require("./routers/courtsRouter");
+
 const app = express();
 const port = process.env.PORT || 3030;
 app.use(cors());
@@ -10,9 +12,9 @@ app.use(express.json());
 app.use(express.urlencoded({extended: true}));
 
 app.use('/users', usersRouter);
+app.use('/courts', courtsRouter);
 app.use((req, res) => {
     res.status(400).send('Something is broken!');
 });
-
 
 app.listen(port, () => console.log(`Express server is running on port ${port}`));
