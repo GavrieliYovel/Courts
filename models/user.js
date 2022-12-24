@@ -1,15 +1,39 @@
 const {Schema, model} = require("mongoose");
-// const { courtSchema } = require("./court")
+const bcrypt = require("bcrypt")
 
 const userSchema = new Schema({
-    name: String,
-    email: String,
-    password: String,
-    birthday: Date,
-    phoneNumber: String,
-    address: String
+    name: {type: String, require: true},
+    email: {type: String, require: true},
+    password: {type: String, require: true},
+    birthday: {type: Date, require: true},
+    phoneNumber: {type: String, require: true},
+    address: {type: String, require: true},
+    type: {type: String, require: true},
+    rank: Number,
+    supervisedCourt: String
 }, {collection: 'users', versionKey: false})
 
+userSchema.pre('save', function (next) {
+    if(this.isModified('password')) {
+        bcrypt.hash(this.password, 8, (err, hash) => {
+            if(err) return next(err)
+
+            this.password = hash;
+            next();
+        })
+    }
+})
+
+userSchema.methods.comparePassword = async function (password) {
+    if (!password) throw new Error('Password')
+
+    try {
+        const result = await bcrypt.compare(password, this.password);
+        return result;
+    } catch (error) {
+        console.log("error while comparing password")
+    }
+}
 const User = model('users', userSchema);
 //
 // const playerSchema = new Schema({
