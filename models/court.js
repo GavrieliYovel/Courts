@@ -1,9 +1,12 @@
 const {Schema, model} = require("mongoose");
-// const { adminSchema } = require("./user")
+const locationSchema = new Schema({
+    LON: Number,
+    LAT: Number
+});
 
 const courtSchema = new Schema({
-    location: { LON: Number,
-                LAT: Number, require: true},
+    name: {type: String, require: true},
+    location: [locationSchema],
     city: {type: String, require: true},
     scope: {type: [String], require: true},
     supervisor: [ String ],
