@@ -39,5 +39,78 @@ exports.usersDbController = {
             })
             .catch(err => console.log(err));
 
-    }
+    },
+    async editUser(req, res) {
+        User.findOne({'email': req.params.email})
+            .then(isExists => {
+                if (isExists)
+                {
+                    const userString = JSON.parse(JSON.stringify(req.body));
+                    User.findOne({'email': req.body.email})
+                        .then( alreadyExists => {
+                            if (alreadyExists)
+                                res.send("You can not change to this email because it already exists");
+                    })
+                    User.deleteOne({email: req.params.email})
+                        .then(result => {
+                            if (result)
+                            {
+                                let newUser = new User({
+                                    name: userString.name,
+                                    email: userString.email.toLowerCase(),
+                                    password: userString.password,
+                                    birthday: userString.birthday,
+                                    phoneNumber: userString.phoneNumber,
+                                    address: userString.address,
+                                    type: userString.type.toLowerCase()
+                                })
+                                if (userString.type == 'player')
+                                    newUser.rank = userString.rank;
+                                if (userString.type == 'admin')
+                                    newUser.supervisedCourt = userString.supervisedCourt;
+                                if(userString.type.toLowerCase() != 'player' && userString.type.toLowerCase() != 'admin') {
+                                    res.send("Wrong type of user");
+                                } else {
+                                    const result = newUser.save();
+                                    if(result)
+                                        res.send(`${req.body.name} profile was edit successfully`);
+                                    else
+                                        res.status(404).send("Error editing user");
+                                }
+                            }
+                            else
+                            {
+                                res.send("Failed to delete the existing user");
+                            }
+                        })
+
+                }
+                else
+                {
+                    res.send("The user doesn't exist");
+                }
+
+    })},
+    deleteUser(req, res) {
+        User.findOne({'email': req.params.email})
+            .then(isexists => {
+                if (isexists)
+                {
+                    User.deleteOne({'email': req.params.email})
+                        .then(result => {
+                            if (result)
+                                res.send("User was deleted");
+                            else
+                                res.send("The user was not deleted");
+                        })
+                        .catch(err => console.log(err));
+
+                }
+                else
+                {
+                    res.send("The user doesn't exist");
+                }
+                })
+            }
+
 }
