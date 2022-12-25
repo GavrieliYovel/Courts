@@ -1,4 +1,4 @@
-const {Schema, model} = require("mongoose");
+const {Schema, model, mongoose} = require("mongoose");
 const bcrypt = require("bcrypt")
 
 const userSchema = new Schema({
@@ -10,7 +10,7 @@ const userSchema = new Schema({
     address: {type: String, require: true},
     type: {type: String, require: true},
     rank: Number,
-    supervisedCourt: String
+    supervisedCourt: {type: [ mongoose.Types.ObjectId ], ref: "courts" }
 }, {collection: 'users', versionKey: false})
 
 userSchema.pre('save', function (next) {
@@ -34,7 +34,7 @@ userSchema.methods.comparePassword = async function (password) {
         console.log("error while comparing password")
     }
 }
-const User = model('users', userSchema);
+const User = model('User', userSchema);
 //
 // const playerSchema = new Schema({
 //     details: [ userSchema ],

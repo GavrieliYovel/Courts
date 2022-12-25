@@ -1,4 +1,4 @@
-const {Schema, model} = require("mongoose");
+const {Schema, model, mongoose} = require("mongoose");
 const locationSchema = new Schema({
     LON: Number,
     LAT: Number
@@ -6,13 +6,13 @@ const locationSchema = new Schema({
 
 const courtSchema = new Schema({
     name: {type: String, require: true},
-    location: [locationSchema],
+    location: locationSchema,
     city: {type: String, require: true},
     scope: {type: [String], require: true},
-    supervisor: [ String ],
+    supervisor: {type: [mongoose.Types.ObjectId], ref: "users"},
     status: String
 }, {collection: 'courts', versionKey: false})
 
-const Court = model('courts', courtSchema);
+const Court = model('Court', courtSchema);
 
 module.exports = { Court };
