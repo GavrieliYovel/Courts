@@ -49,6 +49,8 @@ exports.usersDbController = {
                     console.log("Something went wrong");
                 res.send(null);
             })
+
+
     },
     deleteUser(req, res) {
         User.findOne({'email': req.params.email})
