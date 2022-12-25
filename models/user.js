@@ -3,7 +3,7 @@ const bcrypt = require("bcrypt")
 
 const userSchema = new Schema({
     name: {type: String, require: true},
-    email: {type: String, require: true},
+    email: {type: String, require: true, unique: true},
     password: {type: String, require: true},
     birthday: {type: Date, require: true},
     phoneNumber: {type: String, require: true},
