@@ -39,5 +39,39 @@ exports.usersDbController = {
             })
             .catch(err => console.log(err));
 
-    }
+    },
+    async editUser(req, res) {
+        const {email, newuser} = req.body;
+        await User.findOneAndUpdate({email: email}, newuser, {new: true})
+            .then(updatedUser => res.status(200).send(updatedUser))
+            .catch((err) => {
+                if (err)
+                    console.log("Something went wrong");
+                res.send(null);
+            })
+
+
+    },
+    deleteUser(req, res) {
+        User.findOne({'email': req.params.email})
+            .then(isexists => {
+                if (isexists)
+                {
+                    User.deleteOne({'email': req.params.email})
+                        .then(result => {
+                            if (result)
+                                res.send("User was deleted");
+                            else
+                                res.send("The user was not deleted");
+                        })
+                        .catch(err => console.log(err));
+
+                }
+                else
+                {
+                    res.send("The user doesn't exist");
+                }
+                })
+            }
+
 }
