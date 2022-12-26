@@ -4,9 +4,9 @@ const { usersDbController } = require('../controllers/usersController')
 const usersRouter = new Router();
 
 usersRouter.get('/', usersDbController.getAllUsers);
-usersRouter.get('/:email', usersDbController.getUserByMail);
+usersRouter.get('/:emailOrID', usersDbController.getUserByMail);
 usersRouter.post('/new', usersDbController.createUser );
 usersRouter.put('/edit', usersDbController.editUser );
-usersRouter.delete('/:email', usersDbController.deleteUser );
+usersRouter.delete('/', usersDbController.deleteUser );
 
 module.exports = { usersRouter };

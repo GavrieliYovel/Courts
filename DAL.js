@@ -7,25 +7,29 @@ const {User} = require('./models/user');
 //##############################
 //          Courts
 //##############################
-getAllCourts = async =>{
-    return Court.find({}).populate({path:"supervisor", model: "User"});
+getAllCourts = async ()=> {
+    return Court.find({}).populate({path: "supervisor", model: "User"});
 }
 
-getCourtByID = async (courtID) =>{
+getCourtByID = async (courtID) => {
     return Court.find({_id: courtID});
 }
 
-createCourt = async (newCourtData) =>{
+createCourt = async (newCourtData) => {
     const newCourt = new Court(newCourtData);
-    return newCourt.save();
+    return await newCourt.save();
 }
 
-editCourt = async (courtToEditID, newCourtData) =>{
-  return Court.findByIdAndUpdate(courtToEditID, newCourtData, {new:true});
+editCourt = async (courtToEditID, newCourtData) => {
+    return Court.findByIdAndUpdate(courtToEditID, newCourtData, {new: true});
 }
 
-deleteCourt = async (courtID) =>{
-    return Court.findByIdAndDelete({courtID});
+deleteCourt = async (courtID) => {
+    return Court.findByIdAndDelete(courtID);
+}
+
+addSupervisorToCourt = async (courtID, supervisorID) => {
+    return Court.findByIdAndUpdate(courtID,{ $push :{supervisor: supervisorID }},{safe: true, new : true});
 }
 
 //##############################
@@ -33,10 +37,9 @@ deleteCourt = async (courtID) =>{
 //##############################
 
 
-createUser =  async (newUserData) =>{
+createUser = async (newUserData) => {
     const newUser = User(newUserData);
-    switch(newUser.type.toLowerCase())
-    {
+    switch (newUser.type.toLowerCase()) {
         case "player":
             newUser.rank = 1;
             break;
@@ -49,28 +52,29 @@ createUser =  async (newUserData) =>{
     return newUser.save();
 }
 
-getUserByID = async(userID) =>{
+getUserByID = async (userID) => {
     return User.find({_id: userID});
 }
-getUserByEmail = async(userEmail) =>{
+getUserByEmail = async (userEmail) => {
     return User.findOne({email: userEmail});
 }
 
-editUser = async(userID, newUserData) =>{
-    return User.findByIdAndUpdate(userID, newUserData, {new:true});
+editUser = async (userID, newUserData) => {
+    return User.findByIdAndUpdate(userID, newUserData, {new: true});
 
 }
-deleteUser = async (userID) =>{
-    return Court.findByIdAndDelete({userID});
+deleteUser = async (userID) => {
+    return User.findByIdAndDelete(userID);
 }
-
 
 
 module.exports = {
     createCourt,
     editCourt,
     getAllCourts,
+    getCourtByID,
     deleteCourt,
+    addSupervisorToCourt,
     createUser,
     getUserByEmail,
     getUserByID,

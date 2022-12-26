@@ -6,7 +6,10 @@ const locationSchema = new Schema({
 
 const courtSchema = new Schema({
     name: {type: String, require: true},
-    location: locationSchema,
+    location: {
+        LON: Number,
+        LAT: Number
+    },
     city: {type: String, require: true},
     scope: {type: [String], require: true},
     supervisor: {type: [mongoose.Types.ObjectId], ref: "users"},

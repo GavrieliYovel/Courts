@@ -2,23 +2,24 @@ const { User } = require('../models/user')
 const DAL = require('../DAL');
 
 exports.usersDbController = {
+
     async getAllUsers(req, res) {
         const users = await User.find({});
         res.json(users);
     },
     async createUser(req, res) {
-            const newUser = DAL.createUser(req.body);
+            const newUser = await DAL.createUser(req.body);
             if(newUser)
                 res.status(200).send(newUser);
             else
-                res.status(404).send(newUser);
+                res.status(404).send(null);
         },
     getUserByMail(req, res) {
         const user = DAL.getUserByEmail(req.email);
         if(user)
             res.status(200).send(user);
         else
-            res.status(404).send(user);
+            res.status(404).send(null);
 
     },
     getUserByID(req,res){
@@ -26,7 +27,7 @@ exports.usersDbController = {
         if(user)
             res.status(200).send(user);
         else
-            res.status(404).send(user);
+            res.status(404).send(null);
 
     },
     async editUser(req, res) {
@@ -39,9 +40,10 @@ exports.usersDbController = {
 
 
     },
-    deleteUser(req, res) {
+    async deleteUser(req, res) {
         const {userID} = req.body;
-        const deletedUser = DAL.deleteUser(courtID);
+        const deletedUser = await DAL.deleteUser(userID);
+
         if(deletedUser)
             res.status(200).send(deletedUser);
         else
