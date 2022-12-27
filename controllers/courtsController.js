@@ -50,6 +50,13 @@ exports.courtsDbController = {
             res.status(200).send(updatedCourt);
         else
             res.status(404).send(null);
+    },
+    async deleteSupervisorFromCourt(req, res) {
+        const {courtID, supervisorID} = req.body;
+        const updatedCourt = await DAL.deleteSupervisorFromCourt(courtID, supervisorID);
+        if (updatedCourt)
+            res.status(200).send(updatedCourt);
+        else
+            res.status(404).send(null);
     }
-
 }
