@@ -1,13 +1,14 @@
-const {Schema, model} = require("mongoose");
+const {Schema, model, mongoose} = require("mongoose");
 
 const gameSchema = new Schema({
-    players: {type: [ String ], require: true},
-    court: {type: String, require: true},
+    creator: {type: mongoose.Types.ObjectId, require: true},
+    players: {type: [ mongoose.Types.ObjectId ], ref: "users" , unique: true, require: true},
+    court: {type:  mongoose.Types.ObjectId , ref: "courts", unique: true , require: true},
     scope: {type: String, require: true},
-    gameDate: {type: String, require: true},
+    gameDate: {type: Date, require: true},
     duration: {type: Number, require: true}
 }, {collection: 'games', versionKey: false})
 
-const Game = model('games', gameSchema);
+const Game = model('Game', gameSchema);
 
 module.exports = { Game };

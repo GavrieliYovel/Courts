@@ -1,77 +1,68 @@
-const { User } = require('../models/user')
+const {User} = require('../models/user')
+const DAL = require('../DAL');
+const mongoose = require("mongoose");
+
+async function getUserByMail(req, res) {
+    const user = await DAL.getUserByEmail(req.email);
+    if (user)
+        res.status(200).send(user);
+    else
+        res.status(404).send(null);
+
+}
+async function getUserByID(req, res) {
+    const user = await DAL.getUserByID(req.id);
+    if (user)
+        res.status(200).send(user);
+    else
+        res.status(404).send(null);
+
+}
+
 
 exports.usersDbController = {
+
     async getAllUsers(req, res) {
-        const users = await User.find({});
-        res.json(users);
+        res.status(200).send(await DAL.getAllUsers());
     },
     async createUser(req, res) {
-        let newUser = new User({
-            name: req.body.name,
-            email: req.body.email.toLowerCase(),
-            password: req.body.password,
-            birthday: req.body.birthday,
-            phoneNumber: req.body.phoneNumber,
-            address: req.body.address,
-            type: req.body.type.toLowerCase()
-        })
-        if (req.body.type == 'player')
-            newUser.rank = 1;
-        if (req.body.type == 'admin')
-            newUser.supervisedCourt = null;
-        if(req.body.type.toLowerCase() != 'player' && req.body.type.toLowerCase() != 'admin') {
-            res.send("Wrong type of user")
-        } else {
-            const result = newUser.save();
-            if(result)
-                res.send(`${req.body.name} created successfully`);
-            else
-                res.status(404).send("Error saving user");
-        }
-    },
-    getUserByMail(req, res) {
-         User.findOne({'email': req.params.email})
-            .then(result => {
-                if (result)
-                    res.send(result);
-                else
-                    res.send("The email does not exist, try again");
-            })
-            .catch(err => console.log(err));
-
+        const newUser = await DAL.createUser(req.body);
+        if (newUser)
+            res.status(200).send(newUser);
+        else
+            res.status(404).send(null);
     },
     async editUser(req, res) {
-        const {email, newuser} = req.body;
-        await User.findOneAndUpdate({email: email}, newuser, {new: true})
-            .then(updatedUser => res.status(200).send(updatedUser))
-            .catch((err) => {
-                if (err)
-                    console.log("Something went wrong");
-                res.send(null);
-            })
+        const {userID, newUserData} = req.body;
+        const updatedUser = await DAL.editUser(userID, newUserData);
+        if (updatedUser)
+            res.status(200).send(updatedUser);
+        else
+            res.status(404).send(null);
 
 
     },
-    deleteUser(req, res) {
-        User.findOne({'email': req.params.email})
-            .then(isexists => {
-                if (isexists)
-                {
-                    User.deleteOne({'email': req.params.email})
-                        .then(result => {
-                            if (result)
-                                res.send("User was deleted");
-                            else
-                                res.send("The user was not deleted");
-                        })
-                        .catch(err => console.log(err));
+    async deleteUser(req, res) {
+        const {userID} = req.body;
+        const deletedUser = await DAL.deleteUser(userID);
 
-                }
-                else
-                {
-                    res.send("The user doesn't exist");
-                }
-                })
-            }
+        if (deletedUser)
+            res.status(200).send(deletedUser);
+        else
+            res.status(404).send(null);
+    },
+
+    getUserMW(req,res){
+        const email0rID = req.params.emailOrID;
+        if(mongoose.Types.ObjectId.isValid(email0rID)) {
+            req.id = email0rID;
+            return getUserByID(req, res);
+        }
+        else
+        {
+            req.email = email0rID;
+            return getUserByMail(req,res);
+        }
+    }
 
 }
