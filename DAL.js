@@ -114,12 +114,78 @@ deleteGame = async (gameID) => {
 }
 
 addCourtToGame = async (gameID, courtID) => {
-    return Game.findByIdAndUpdate(gameID,{court: courtID} ,{safe: true, new: true});
+    return Game.findByIdAndUpdate(gameID, {court: courtID}, {safe: true, new: true});
 }
 
 addPlayerToGame = async (gameID, playerID) => {
     return Game.findByIdAndUpdate(gameID, {$push: {players: playerID}}, {safe: true, new: true});
 }
+
+
+//##############################
+//          Report
+//##############################
+
+getReportByID = async (reportID) => {
+    return Report.find({_id: reportID}).populate({path: "reported", model: "User"}).populate({
+        path: "reporter",
+        model: "User"
+    });
+}
+
+getAllReports = async () => {
+    return Report.find({}).populate({path: "reported", model: "User"}).populate({
+        path: "reporter",
+        model: "User"
+    });
+}
+
+getReportsByReportedID = async (reportedID) => {
+    return Report.find({reported: reportedID}).populate({path: "reported", model: "User"}).populate({
+        path: "reporter",
+        model: "User"
+    });
+}
+getReportsByReporterID = async (reporterID) => {
+    return Report.find({reporter: reporterID}).populate({path: "reported", model: "User"}).populate({
+        path: "reporter",
+        model: "User"
+    });
+}
+
+getReportsByReporterIdAndReportedId = async (reporterID, reportedID) => {
+    return Report.find({$and: [{reporter: reporterID}, {reported: reportedID}]}).populate({
+        path: "reported",
+        model: "User"
+    }).populate({
+        path: "reporter",
+        model: "User"
+    });
+}
+
+getReportsBetweenDates = async (startDate, endDate) => {
+    return Report.find({reportDate: { $gte: new Date(startDate), $lte: new Date(endDate)}}).populate({
+        path: "reported",
+        model: "User"
+    }).populate({
+        path: "reporter",
+        model: "User"
+    });
+}
+
+createReport = async (newReportData) => {
+    const newReport = new Report(newReportData);
+    return await newReport.save();
+}
+
+editReport = async (reportID, newReportData) => {
+    return Report.findByIdAndUpdate(reportID, newReportData, {new: true});
+}
+
+deleteReport = async (reportID) =>{
+    return Report.findByIdAndDelete(reportID);
+}
+
 
 module.exports = {
     createCourt,
@@ -142,5 +208,13 @@ module.exports = {
     editGame,
     deleteGame,
     addCourtToGame,
-    addPlayerToGame
+    addPlayerToGame,
+    getReportByID,
+    getAllReports,
+    getReportsByReportedID,
+    getReportsByReporterID,
+    getReportsBetweenDates,
+    createReport,
+    editReport,
+    deleteReport
 }
