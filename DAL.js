@@ -12,7 +12,7 @@ getAllCourts = async () => {
 }
 
 getCourtByID = async (courtID) => {
-    return Court.find({_id: courtID}).populate({path: "supervisor", model: "User"});
+    return Court.findById(courtID).populate({path: "supervisor", model: "User"});
 }
 
 createCourt = async (newCourtData) => {
@@ -65,7 +65,7 @@ createUser = async (newUserData) => {
 }
 
 getUserByID = async (userID) => {
-    return User.find({_id: userID}).populate({path: "supervisedCourt", model: "Court"});
+    return User.findById(userID).populate({path: "supervisedCourt", model: "Court"});
 }
 getUserByEmail = async (userEmail) => {
     return User.findOne({email: userEmail}).populate({path: "supervisedCourt", model: "Court"});
@@ -95,7 +95,7 @@ getGamesByPlayerID = async (playerID) => {
 }
 
 getGameByID = async (gameID) => {
-    return Game.find({_id: gameID}).populate({path: "players", model: "User"}).populate({
+    return Game.findById(gameID).populate({path: "players", model: "User"}).populate({
         path: "court",
         model: "Court"
     });
@@ -121,13 +121,20 @@ addPlayerToGame = async (gameID, playerID) => {
     return Game.findByIdAndUpdate(gameID, {$push: {players: playerID}}, {safe: true, new: true});
 }
 
+deletePlayerFromGame = async (gameID, playerID) => {
+    return Game.findByIdAndUpdate(gameID, {$pull: {players: playerID}}, {safe: true, new: true});
+}
+changeCourtOfGame = async (gameID, newCourtID) => {
+    return Game.findByIdAndUpdate(gameID, {court: newCourtID}, {safe: true, new: true});
+}
+
 
 //##############################
 //          Report
 //##############################
 
 getReportByID = async (reportID) => {
-    return Report.find({_id: reportID}).populate({path: "reported", model: "User"}).populate({
+    return Report.findById(reportID).populate({path: "reported", model: "User"}).populate({
         path: "reporter",
         model: "User"
     });
@@ -194,13 +201,13 @@ module.exports = {
     getCourtByID,
     deleteCourt,
     addSupervisorToCourt,
+    deleteSupervisorFromCourt,
     getAllUsers,
     createUser,
     getUserByEmail,
     getUserByID,
     editUser,
     deleteUser,
-    deleteSupervisorFromCourt,
     getAllGames,
     getGamesByPlayerID,
     getGameByID,
@@ -209,6 +216,8 @@ module.exports = {
     deleteGame,
     addCourtToGame,
     addPlayerToGame,
+    deletePlayerFromGame,
+    changeCourtOfGame,
     getReportByID,
     getAllReports,
     getReportsByReportedID,

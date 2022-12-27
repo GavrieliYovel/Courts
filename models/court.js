@@ -2,10 +2,10 @@ const {Schema, model, mongoose} = require("mongoose");
 
 const courtSchema = new Schema({
     name: {type: String, require: true},
-    location: {
+    location:{ type:{
         LON: Number,
         LAT: Number
-    },
+    }, require: true },
     city: {type: String, require: true},
     scope: {type: [String], require: true},
     supervisor: {type: [mongoose.Types.ObjectId], ref: "users", unique: true},
@@ -14,4 +14,4 @@ const courtSchema = new Schema({
 
 const Court = model('Court', courtSchema);
 
-module.exports = { Court };
+module.exports = {Court};

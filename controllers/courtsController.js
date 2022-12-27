@@ -11,6 +11,8 @@ exports.courtsDbController = {
             const court = await DAL.getCourtByID(req.params.id);
             if (court)
                 res.status(200).send(court);
+            else
+                res.status(404).send(null);
         } else
             res.status(404).send(null);
     },
