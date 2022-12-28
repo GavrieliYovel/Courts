@@ -3,6 +3,7 @@ const {mongoose} = require('mongoose');
 
 exports.gamesDbController = {
     async getAllGames(req,res) {
+        console.log(req.session.user)
         res.status(200).send(await DAL.getAllGames());
     },
 

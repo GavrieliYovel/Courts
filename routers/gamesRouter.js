@@ -1,5 +1,5 @@
 const { Router } = require('express');
-const { gamesDbController } = require('../controllers/gamesController')
+const { gamesDbController } = require('../controllers/gameController')
 
 const gamesRouter = new Router();
 
