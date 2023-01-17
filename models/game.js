@@ -6,10 +6,13 @@ const gameSchema = new Schema({
     creator: {type: mongoose.Types.ObjectId, require: true},
     // players: {type: [ mongoose.Types.ObjectId ], ref: "users" , unique: true, require: true},
     court:  {
-        type: { type: mongoose.Types.ObjectId, ref :'courts'},
+        type: mongoose.Types.ObjectId,
+        ref :'courts',
         validate: {
-            validator : (court) => Court.exists({_id : court}),
-            message : inValidCourt => `${inValidCourt} is not a valid court`
+            validator : (court) => {
+                return Promise.resolve(Court.exists({_id: court}));
+            },
+            message :  invalidCourt =>`${invalidCourt} is not a valid court`
         },
         required: true,
         unique: true
