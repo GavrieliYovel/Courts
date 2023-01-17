@@ -4,7 +4,6 @@ const {Report} = require('./models/report');
 const {User} = require('./models/user');
 const {Team} = require('./models/team');
 
-
 //##############################
 //          Courts
 //##############################
@@ -134,6 +133,14 @@ addCourtToGame = async (gameID, courtID) => {
 
 getGamesByDate = async (date, courtID) => {
     return Game.find({gameDate: date, court: courtID});
+}
+
+getGamesBetweenHours = async (startDate, endDate, courtID) => {
+    return Game.find({
+        gameDate: { $gte: startDate},
+        end: { $lte: endDate},
+        court: courtID
+    });
 }
 
 // addPlayerToGame = async (gameID, playerID) => {
@@ -287,6 +294,7 @@ module.exports = {
     getAllReports,
     getReportsByReportedID,
     getReportsByReporterID,
+    getReportsByReporterIdAndReportedId,
     getReportsBetweenDates,
     createReport,
     editReport,
@@ -297,5 +305,7 @@ module.exports = {
     addPlayerToTeam,
     deletePlayerFromTeam,
     deleteTeam,
-    editTeam
+    editTeam,
+    getGamesByDate,
+    getGamesBetweenHours
 }

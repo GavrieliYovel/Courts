@@ -1,5 +1,6 @@
 const DAL = require('../DAL');
 const {mongoose} = require('mongoose');
+const moment = require('moment');
 
 const getGamesByPlayerID = async (id, req, res) =>{
         const games = await DAL.getGameByTeamPlayerId(req.params.id);
@@ -36,11 +37,16 @@ exports.gamesDbController = {
     },
 
     async createGame(req, res) {
-        const newGame = await DAL.createGame(req.body);
-        if (newGame)
-            res.status(200).send(newGame);
-        else
-            res.status(404).send(null);
+        const games = DAL.getGamesBetweenHours(moment(req.body.gameData).toDate(), moment(req.body.endData).toDate(), req.body.courtID);
+        if(!games) {
+            const newGame = await DAL.createGame(req.body);
+            if (newGame)
+                res.status(200).send(newGame);
+            else
+                res.status(404).send(null);
+        } else {
+            res.status(404).send('there is a game scheduled at this time')
+        }
     },
     async editGame(req, res) {
         const {gameID, newGameData} = req.body;
@@ -90,6 +96,14 @@ exports.gamesDbController = {
             else
                 res.status(404).send(null);
         } else
+            res.status(404).send(null);
+    },
+    async getGameByDate(req, res) {
+        const {date, courtID} = req.query;
+        const games = await DAL.getGamesByDate(moment(date).toDate(), courtID);
+        if(games)
+            res.status(200).send(games);
+        else
             res.status(404).send(null);
     }
 }

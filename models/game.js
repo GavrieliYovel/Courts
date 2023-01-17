@@ -16,7 +16,7 @@ const gameSchema = new Schema({
     },
     scope: {type: String, require: true},
     gameDate: {type: Date, require: true},
-    duration: {type: Number, require: true},
+    endDate: {type: Date, require: true},
     team: {type: mongoose.Types.ObjectId  , ref: "teams" , unique: true, require: true},
 
 }, {collection: 'games', versionKey: false})
