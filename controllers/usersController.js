@@ -1,4 +1,3 @@
-const {User} = require('../models/user')
 const DAL = require('../DAL');
 const mongoose = require("mongoose");
 
@@ -19,12 +18,12 @@ async function getUserByID(req, res) {
 
 }
 
-
 exports.usersDbController = {
 
     async getAllUsers(req, res) {
         res.status(200).send(await DAL.getAllUsers());
     },
+
     async createUser(req, res) {
         const newUser = await DAL.createUser(req.body);
         if (newUser)
@@ -53,7 +52,7 @@ exports.usersDbController = {
     },
 
     getUserMW(req,res){
-        const email0rID = req.params.emailOrID;
+        const email0rID = req.params.emailorid;
         if(mongoose.Types.ObjectId.isValid(email0rID)) {
             req.id = email0rID;
             return getUserByID(req, res);
