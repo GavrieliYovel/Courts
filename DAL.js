@@ -246,10 +246,6 @@ editTeam = async (teamId, newTeamData) =>{
 }
 
 
-
-
-
-
 module.exports = {
     createCourt,
     editCourt,
