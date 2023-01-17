@@ -12,4 +12,4 @@ reportsRouter.post("/", reportsController.createReport);
 reportsRouter.put("/", reportsController.editReport);
 reportsRouter.delete("/", reportsController.deleteReport)
 
-module.exports = reportsRouter;
+module.exports = {reportsRouter};

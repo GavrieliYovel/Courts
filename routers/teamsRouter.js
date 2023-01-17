@@ -12,4 +12,4 @@ teamsRouter.post("/", teamsController.createTeam);
 teamsRouter.delete("/", teamsController.deleteTeam);
 
 
-module.exports = teamsRouter;
+module.exports = {teamsRouter};
