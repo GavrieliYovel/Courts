@@ -1,5 +1,5 @@
 const DAL = require('../DAL');
-const mongoose = require("mongoose");
+const {mongoose} = require("mongoose");
 
 async function getUserByMail(req, res) {
     const user = await DAL.getUserByEmail(req.email);
@@ -62,6 +62,15 @@ exports.usersDbController = {
             req.email = email0rID;
             return getUserByMail(req,res);
         }
+    },
+    incUserRank : async (req, res) => {
+        const updatedUser = DAL.increaseUserRank(req.params.id);
+        if(updatedUser)
+            res.status(200).send(updatedUser);
+    },
+
+    decUserRank : async (req, res) => {
+
     }
 
 }
