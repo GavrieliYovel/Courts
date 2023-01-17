@@ -4,7 +4,6 @@ const {Report} = require('./models/report');
 const {User} = require('./models/user');
 const {Team} = require('./models/team');
 
-
 //##############################
 //          Courts
 //##############################
@@ -47,6 +46,10 @@ deleteSupervisorFromCourt = async (courtID, supervisorID) => {
 //          Users
 //##############################
 
+userExists = async (userId) =>{
+    return User.exists({_id: userId});
+}
+
 getAllUsers = async () => {
     return User.find({}).populate({path: "supervisedCourt", model: "Court"});
 }
@@ -80,9 +83,26 @@ deleteUser = async (userID) => {
     return User.findByIdAndDelete(userID);
 }
 
+decreaseUserRank = async (userID) => {
+    return User.findByIdAndUpdate(userID, {$inc: {'rank': -1}}, {new: true});
+}
+
+increaseUserRank = async (userID) => {
+    return User.findByIdAndUpdate(userID, {$inc: {'rank': 1}}, {new: true});
+}
+
+getUserRank = async (userID) => {
+    let user = User.findById(userID);
+    return user.rank;
+}
+
 //##############################
 //          Game
 //##############################
+
+gameExists = async (id) =>{
+    return Game.exists({_id: id});
+}
 
 getAllGames = async () => {
     return Game.find({}).populate({path: "players", model: "User"}).populate({path: "court", model: "Court"});
@@ -124,6 +144,18 @@ addCourtToGame = async (gameID, courtID) => {
     return Game.findByIdAndUpdate(gameID, {court: courtID}, {safe: true, new: true});
 }
 
+getGamesByDate = async (date, courtID) => {
+    return Game.find({gameDate: date, court: courtID});
+}
+
+getGamesBetweenHours = async (startDate, endDate, courtID) => {
+    return Game.find({
+        gameDate: { $gte: startDate},
+        end: { $lte: endDate},
+        court: courtID
+    });
+}
+
 // addPlayerToGame = async (gameID, playerID) => {
 //     return Game.findByIdAndUpdate(gameID, {$push: {players: playerID}}, {safe: true, new: true});
 // }
@@ -131,6 +163,11 @@ addCourtToGame = async (gameID, courtID) => {
 deletePlayerFromGame = async (gameID, playerID) => {
     return Game.findByIdAndUpdate(gameID, {$pull: {players: playerID}}, {safe: true, new: true});
 }
+
+addPlayerToGame = async (gameID, playerID) => {
+    return Game.findByIdAndUpdate(gameID, {$push: {players: playerID}}, {safe: true, new: true});
+}
+
 changeCourtOfGame = async (gameID, newCourtID) => {
     return Game.findByIdAndUpdate(gameID, {court: newCourtID}, {safe: true, new: true});
 }
@@ -203,6 +240,12 @@ deleteReport = async (reportID) =>{
 //##############################
 //          Team
 //##############################
+teamExists = async (teamId) =>{
+    return Team.exists({_id: teamId});
+}
+getAllTeams = async () => {
+    return Team.find({});
+}
 
 getTeamByTeamId = async (teamId) =>{
     return Team.findById(teamId).populate({
@@ -246,11 +289,10 @@ editTeam = async (teamId, newTeamData) =>{
 }
 
 
-
-
-
-
 module.exports = {
+    gameExists,
+    teamExists,
+    userExists,
     createCourt,
     editCourt,
     getAllCourts,
@@ -277,6 +319,7 @@ module.exports = {
     getAllReports,
     getReportsByReportedID,
     getReportsByReporterID,
+    getReportsByReporterIdAndReportedId,
     getReportsBetweenDates,
     createReport,
     editReport,
@@ -287,5 +330,12 @@ module.exports = {
     addPlayerToTeam,
     deletePlayerFromTeam,
     deleteTeam,
-    editTeam
+    editTeam,
+    getGamesByDate,
+    getGamesBetweenHours,
+    getAllTeams,
+    decreaseUserRank,
+    increaseUserRank,
+    getUserRank,
+    addPlayerToGame
 }

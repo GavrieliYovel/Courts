@@ -4,14 +4,13 @@ const { gamesDbController } = require('../controllers/gamesController')
 const gamesRouter = new Router();
 
 gamesRouter.get('/', gamesDbController.getAllGames);
-gamesRouter.get('/:playerID', gamesDbController.getGamesByPlayerID);
-gamesRouter.get('/:ID', gamesDbController.getGameByID);
+gamesRouter.get('/:id', gamesDbController.getByIdRouter);
+gamesRouter.get('/date', gamesDbController.getGameByDate);
 gamesRouter.post('/new', gamesDbController.createGame);
 gamesRouter.put('/edit', gamesDbController.editGame);
 gamesRouter.delete('/', gamesDbController.deleteGame);
-gamesRouter.put('/addCourt', gamesDbController.addCourtToGame);
-gamesRouter.put('/addPlayer', gamesDbController.addPlayerToGame);
-gamesRouter.delete('/deleteFromGame', gamesDbController.deletePlayerFromGame);
-gamesRouter.put('/changeCourt', gamesDbController.changeCourtOfGame);
+gamesRouter.put('/addcourt', gamesDbController.addCourtToGame);
+gamesRouter.delete('/deleteplayer', gamesDbController.deletePlayerFromGame);
+gamesRouter.put('/changecourt', gamesDbController.changeCourtOfGame);
 
 module.exports = { gamesRouter };

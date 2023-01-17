@@ -1,6 +1,5 @@
-const {User} = require('../models/user')
 const DAL = require('../DAL');
-const mongoose = require("mongoose");
+const {mongoose} = require("mongoose");
 
 async function getUserByMail(req, res) {
     const user = await DAL.getUserByEmail(req.email);
@@ -19,12 +18,12 @@ async function getUserByID(req, res) {
 
 }
 
-
 exports.usersDbController = {
 
     async getAllUsers(req, res) {
         res.status(200).send(await DAL.getAllUsers());
     },
+
     async createUser(req, res) {
         const newUser = await DAL.createUser(req.body);
         if (newUser)
@@ -53,7 +52,7 @@ exports.usersDbController = {
     },
 
     getUserMW(req,res){
-        const email0rID = req.params.emailOrID;
+        const email0rID = req.params.emailorid;
         if(mongoose.Types.ObjectId.isValid(email0rID)) {
             req.id = email0rID;
             return getUserByID(req, res);
@@ -63,6 +62,15 @@ exports.usersDbController = {
             req.email = email0rID;
             return getUserByMail(req,res);
         }
+    },
+    incUserRank : async (req, res) => {
+        const updatedUser = DAL.increaseUserRank(req.params.id);
+        if(updatedUser)
+            res.status(200).send(updatedUser);
+    },
+
+    decUserRank : async (req, res) => {
+
     }
 
 }

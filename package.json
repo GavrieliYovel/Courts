@@ -7,6 +7,7 @@
     "dotenv": "^16.0.3",
     "eslint": "^8.32.0",
     "express": "^4.18.2",
+    "moment": "^2.29.4",
     "mongoose": "^6.8.3",
     "mongoose-find-by-reference": "^1.0.5",
     "nodemon": "^2.0.20"

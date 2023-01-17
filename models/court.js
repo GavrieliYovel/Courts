@@ -9,6 +9,7 @@ const courtSchema = new Schema({
     city: {type: String, require: true},
     scope: {type: [String], require: true},
     supervisor: {type: [mongoose.Types.ObjectId], ref: "users", unique: true},
+    games: {type: [mongoose.Types.ObjectId], ref: "games", unique: true},
     status: String
 }, {collection: 'courts', versionKey: false})
 

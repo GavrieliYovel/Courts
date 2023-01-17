@@ -2,6 +2,7 @@ const DAL = require('../DAL');
 const {mongoose} = require('mongoose');
 
 exports.courtsDbController = {
+
     async getAllUCourts(req, res) {
         res.status(200).send(await DAL.getAllCourts());
     },
