@@ -1,31 +1,38 @@
 const DAL = require('../DAL');
 const {mongoose} = require('mongoose');
 
+const getGamesByPlayerID = async (id, req, res) =>{
+        const games = await DAL.getGameByTeamPlayerId(req.params.id);
+        if (games)
+            res.status(200).send(games);
+        else
+            res.status(404).send(null);
+
+}
+
+const getGameByID = async (id, req, res) =>{
+        const game = await DAL.getGameByID(req.params.id);
+        if (game)
+            res.status(200).send(game);
+        else
+            res.status(404).send(null);
+}
+
 exports.gamesDbController = {
+
+    async getByIdRouter (req, res){
+        const id = req.params.id;
+        if (mongoose.Types.ObjectId.isValid(req.params.id)) {
+            if (await DAL.userExists(id))
+                await getGamesByPlayerID(id, req, res);
+            else if (await DAL.gameExists(id))
+                await getGameByID(id, req, res);
+        } else
+            res.status(404).send(null);
+    },
+
     async getAllGames(req,res) {
         res.status(200).send(await DAL.getAllGames());
-    },
-
-    async getGamesByPlayerID(req, res) {
-        if (mongoose.Types.ObjectId.isValid(req.params.id)) {
-            const games = await DAL.getGamesByPlayerID(req.params.id);
-            if (games)
-                res.status(200).send(games);
-            else
-                res.status(404).send(null);
-        } else
-            res.status(404).send(null);
-    },
-
-    async getGameByID(req, res) {
-        if (mongoose.Types.ObjectId.isValid(req.params.id)) {
-            const game = await DAL.getGamesByPlayerID(req.params.id);
-            if (game)
-                res.status(200).send(game);
-            else
-                res.status(404).send(null);
-        } else
-            res.status(404).send(null);
     },
 
     async createGame(req, res) {
@@ -56,17 +63,6 @@ exports.gamesDbController = {
         const {gameID, newGameData} = req.body;
         if (mongoose.Types.ObjectId.isValid(gameID)) {
             const editedGame = await DAL.addCourtToGame(gameID,newGameData);
-            if (editedGame)
-                res.status(200).send(editedGame);
-            else
-                res.status(404).send(null);
-        } else
-            res.status(404).send(null);
-    },
-    async addPlayerToGame(req, res) {
-        const {gameID, newGameData} = req.body;
-        if (mongoose.Types.ObjectId.isValid(gameID)) {
-            const editedGame = await DAL.addPlayerToGame(gameID, newGameData);
             if (editedGame)
                 res.status(200).send(editedGame);
             else

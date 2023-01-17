@@ -47,6 +47,10 @@ deleteSupervisorFromCourt = async (courtID, supervisorID) => {
 //          Users
 //##############################
 
+userExists = async (userId) =>{
+    return User.exists({_id: userId});
+}
+
 getAllUsers = async () => {
     return User.find({}).populate({path: "supervisedCourt", model: "Court"});
 }
@@ -83,6 +87,10 @@ deleteUser = async (userID) => {
 //##############################
 //          Game
 //##############################
+
+gameExists = async (id) =>{
+    return Game.exists({_id: id});
+}
 
 getAllGames = async () => {
     return Game.find({}).populate({path: "players", model: "User"}).populate({path: "court", model: "Court"});
@@ -247,6 +255,8 @@ editTeam = async (teamId, newTeamData) =>{
 
 
 module.exports = {
+    gameExists,
+    userExists,
     createCourt,
     editCourt,
     getAllCourts,
