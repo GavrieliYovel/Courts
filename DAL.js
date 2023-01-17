@@ -2,6 +2,7 @@ const {Court} = require('./models/court');
 const {Game} = require('./models/game');
 const {Report} = require('./models/report');
 const {User} = require('./models/user');
+const {Team} = require('./models/team');
 
 
 //##############################
@@ -38,7 +39,7 @@ addSupervisorToCourt = async (courtID, supervisorID) => {
     return Court.findByIdAndUpdate(courtID, {$push: {supervisor: supervisorID}}, {safe: true, new: true});
 }
 deleteSupervisorFromCourt = async (courtID, supervisorID) => {
-    await User.findByIdAndUpdate(supervisorID, {$pull: {supervisedCourt: courtID}}, {safe: true})
+    await User.findByIdAndUpdate(supervisorID, {$pull: {supervisedCourt: courtID}}, {safe: true});
     return Court.findByIdAndUpdate(courtID, {$pull: {supervisor: supervisorID}}, {safe: true, new: true});
 }
 
@@ -87,12 +88,18 @@ getAllGames = async () => {
     return Game.find({}).populate({path: "players", model: "User"}).populate({path: "court", model: "Court"});
 }
 
-getGamesByPlayerID = async (playerID) => {
-    return Game.find({players: {$in: playerID}}).populate({path: "players", model: "User"}).populate({
-        path: "court",
-        model: "Court"
-    });
+// getGamesByPlayerID = async (playerID) => {
+//     return Game.find({players: {$in: playerID}}).populate({path: "players", model: "User"}).populate({
+//         path: "court",
+//         model: "Court"
+//     });
+// }
+
+
+getGameByTeamPlayerId = async(teamPlayerId) =>{
+    return  Game.find({'team.players' : teamPlayerId});
 }
+
 
 getGameByID = async (gameID) => {
     return Game.findById(gameID).populate({path: "players", model: "User"}).populate({
@@ -117,9 +124,9 @@ addCourtToGame = async (gameID, courtID) => {
     return Game.findByIdAndUpdate(gameID, {court: courtID}, {safe: true, new: true});
 }
 
-addPlayerToGame = async (gameID, playerID) => {
-    return Game.findByIdAndUpdate(gameID, {$push: {players: playerID}}, {safe: true, new: true});
-}
+// addPlayerToGame = async (gameID, playerID) => {
+//     return Game.findByIdAndUpdate(gameID, {$push: {players: playerID}}, {safe: true, new: true});
+// }
 
 deletePlayerFromGame = async (gameID, playerID) => {
     return Game.findByIdAndUpdate(gameID, {$pull: {players: playerID}}, {safe: true, new: true});
@@ -193,6 +200,55 @@ deleteReport = async (reportID) =>{
     return Report.findByIdAndDelete(reportID);
 }
 
+//##############################
+//          Team
+//##############################
+
+getTeamByTeamId = async (teamId) =>{
+    return Team.findById(teamId).populate({
+        path: 'players',
+        model: "User"
+    }).populate({
+        path: 'court',
+        model: 'Court'
+    });
+}
+getTeamsByPlayerId = async (playerId) => {
+    return Team.find({players : playerId }).populate({
+        path: 'players',
+        model: "User"
+    }).populate({
+        path: 'court',
+        model: 'Court'
+    });
+}
+
+
+createTeam = async (newTeamData) =>{
+    const newTeam = new Team(newTeamData);
+    return await  newTeam.save();
+}
+
+addPlayerToTeam  = async (teamId, newPlayerId) =>{
+    return Team.findByIdAndUpdate(teamId, {$push: {players: newPlayerId}}, {safe: true, new: true});
+}
+
+deletePlayerFromTeam = async (teamId, deletePlayerId) => {
+    return Team.findByIdAndUpdate(teamId,{$pull: {players: deletePlayerId}}, {safe: true, new: true});
+}
+
+deleteTeam = async (teamId) => {
+    return Team.findByIdAndDelete(teamId);
+}
+
+editTeam = async (teamId, newTeamData) =>{
+    return Team.findByIdAndUpdate(teamId, newTeamData, {new: true});
+}
+
+
+
+
+
 
 module.exports = {
     createCourt,
@@ -209,13 +265,12 @@ module.exports = {
     editUser,
     deleteUser,
     getAllGames,
-    getGamesByPlayerID,
+    getGameByTeamPlayerId,
     getGameByID,
     createGame,
     editGame,
     deleteGame,
     addCourtToGame,
-    addPlayerToGame,
     deletePlayerFromGame,
     changeCourtOfGame,
     getReportByID,
@@ -225,5 +280,12 @@ module.exports = {
     getReportsBetweenDates,
     createReport,
     editReport,
-    deleteReport
+    deleteReport,
+    getTeamByTeamId,
+    getTeamsByPlayerId,
+    createTeam,
+    addPlayerToTeam,
+    deletePlayerFromTeam,
+    deleteTeam,
+    editTeam
 }
