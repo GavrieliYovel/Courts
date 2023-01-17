@@ -124,6 +124,10 @@ addCourtToGame = async (gameID, courtID) => {
     return Game.findByIdAndUpdate(gameID, {court: courtID}, {safe: true, new: true});
 }
 
+getGamesByDate = async (date, courtID) => {
+    return Game.find({gameDate: date, court: courtID});
+}
+
 // addPlayerToGame = async (gameID, playerID) => {
 //     return Game.findByIdAndUpdate(gameID, {$push: {players: playerID}}, {safe: true, new: true});
 // }
