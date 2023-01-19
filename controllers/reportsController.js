@@ -49,8 +49,10 @@ module.exports = {
             res.status(404).send(null);
     },
     getReportsBetweenDates: async (req, res) => {
-        const startDate = moment(req.query.startdate).toDate();
-        const endDate = moment(req.query.enddate).toDate();
+        console.log("getReportsBetweenDates");
+        const startDate = moment(req.params.startdate).toDate();
+        const endDate = moment(req.params.enddate).toDate();
+        console.log(startDate + " " + endDate);
         if (startDate && endDate) {
             const reports = await DAL.getReportsBetweenDates(startDate, endDate);
             if (reports)

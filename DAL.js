@@ -251,18 +251,12 @@ getTeamByTeamId = async (teamId) =>{
     return Team.findById(teamId).populate({
         path: 'players',
         model: "User"
-    }).populate({
-        path: 'court',
-        model: 'Court'
     });
 }
 getTeamsByPlayerId = async (playerId) => {
     return Team.find({players : playerId }).populate({
         path: 'players',
         model: "User"
-    }).populate({
-        path: 'court',
-        model: 'Court'
     });
 }
 

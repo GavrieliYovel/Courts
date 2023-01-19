@@ -7,9 +7,9 @@ reportsRouter.get ('/:id', reportsController.getReportByID);
 reportsRouter.get("/reporter/:id",reportsController.getReportsByReporterID);
 reportsRouter.get ("/reported/:id", reportsController.getReportsByReportedID);
 reportsRouter.get("/:reporterid/:reportedid",reportsController.getReportsByReportedIDAndReportedID);
-reportsRouter.get("/date",reportsController.getReportsBetweenDates);
-reportsRouter.post("/", reportsController.createReport);
-reportsRouter.put("/", reportsController.editReport);
+reportsRouter.get("/date/:startdate/:enddate",reportsController.getReportsBetweenDates);
+reportsRouter.post("/new", reportsController.createReport);
+reportsRouter.put("/edit", reportsController.editReport);
 reportsRouter.delete("/", reportsController.deleteReport)
 
 module.exports = {reportsRouter};
