@@ -1,11 +1,39 @@
+
 initMap = () => {
     // maps options
-    let options = {
-        zoom: 8,
+    //  getLocation = () => {
+    //         if (navigator.geolocation) {
+    //             const options = {
+    //                 enableHighAccuracy: true,
+    //                 // timeout: 5000,
+    //                 maximumAge: 0
+    //             };
+    //             navigator.geolocation.getCurrentPosition( successFunc, errorFunc,options);
+    //         }
+    //         else
+    //         { x.innerHTML= "Geolocation is not supported by this browser."; }
+    //  }
+    //  const errorFunc = (e) =>  {
+    //     console.log("error code:" + e.code + 'message: ' + e.message );
+    // }
+    //
+    // const successFunc = (position) => {
+    //     let lat = position.coords.latitude;
+    //     let lng = position.coords.longitude;
+    //     let myLocation = new google.maps.LatLng(lat, lng);
+    // }
+    //
+    // let mapOptions = {
+    //     center: new google.maps.LatLng(myLocation.lat(),myLocation.lng()),
+    //     zoom: 13,
+    //     mapTypeId: google.maps.MapTypeId.ROADMAP
+    // };
+    let mapOptions = {
+        zoom: 11,
         center: {lat: 31, lng: 34}
     }
     // new map
-    let map = new google.maps.Map(document.getElementById('map'), options);
+    let map = new google.maps.Map(document.getElementById('map'), mapOptions);
 
 
     // listen for click on map
@@ -56,3 +84,5 @@ initMap = () => {
         addMarker(markers[i]);
     }
 }
+// google.maps.event.addDomListener(window, 'load', getLocation() );
+
