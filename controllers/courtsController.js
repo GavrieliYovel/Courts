@@ -1,62 +1,65 @@
-const { Court } = require('../models/court')
-const {User} = require("../models/user");
+const DAL = require('../DAL');
+const {mongoose} = require('mongoose');
 
 exports.courtsDbController = {
+
     async getAllUCourts(req, res) {
-        const courts = await Court.find({});
-        res.json(courts);
+        res.status(200).send(await DAL.getAllCourts());
     },
+
+    async getCourtByID(req, res) {
+        if (mongoose.Types.ObjectId.isValid(req.params.id)) {
+            const court = await DAL.getCourtByID(req.params.id);
+            if (court)
+                res.status(200).send(court);
+            else
+                res.status(404).send(null);
+        } else
+            res.status(404).send(null);
+    },
+
     async createCourt(req, res) {
-        let newCourt = new Court({
-            name: req.body.name,
-            // location: req.body.location,
-            location: [{
-                "LON": req.body.location.LON,
-                "LAT": req.body.location.LAT,
-            }],
-            city: req.body.city,
-            scope: req.body.scope,
-            supervisor: req.body.supervisor,
-            status: req.body.status
-        })
-        const result = newCourt.save();
-        if(result)
-            res.send(`${req.body.name} created successfully`);
+        const newCourt = await DAL.createCourt(req.body);
+        if (newCourt)
+            res.status(200).send(newCourt);
         else
-            res.status(404).send("Error saving court");
+            res.status(404).send(null);
 
     },
+
     async editCourt(req, res) {
-        const {name, newCourt} = req.body;
-        await Court.findOneAndUpdate({name: name}, newCourt, {new: true})
-            .then(updatedCourt => res.status(200).send(updatedCourt))
-            .catch((err) => {
-                if (err)
-                    console.log("Something went wrong");
-                res.send(null);
-            })
-
+        const {courtID, newCourtData} = req.body;
+        const updatedCourt = await DAL.editCourt(courtID, newCourtData);
+        if (updatedCourt)
+            res.status(200).send(updatedCourt);
+        else
+            res.status(404).send(null);
 
     },
-    deleteCourt(req, res) {
-        Court.findOne({'name': req.params.name})
-            .then(isexists => {
-                if (isexists)
-                {
-                    Court.deleteOne({'name': req.params.name})
-                        .then(result => {
-                            if (result)
-                                res.send("Court was deleted");
-                            else
-                                res.send("The court was not deleted");
-                        })
-                        .catch(err => console.log(err));
 
-                }
-                else
-                {
-                    res.send("The court doesn't exist");
-                }
-            })
+    async deleteCourt(req, res) {
+        const {courtID} = req.body;
+        const deletedCourt = await DAL.deleteCourt(courtID);
+        if (deletedCourt)
+            res.status(200).send(deletedCourt);
+        else
+            res.status(404).send(null);
+
+    },
+    async addSupervisorToCourt(req, res) {
+        const {courtID, supervisorID} = req.body;
+        const updatedCourt = await DAL.addSupervisorToCourt(courtID, supervisorID);
+        if (updatedCourt)
+            res.status(200).send(updatedCourt);
+        else
+            res.status(404).send(null);
+    },
+    async deleteSupervisorFromCourt(req, res) {
+        const {courtID, supervisorID} = req.body;
+        const updatedCourt = await DAL.deleteSupervisorFromCourt(courtID, supervisorID);
+        if (updatedCourt)
+            res.status(200).send(updatedCourt);
+        else
+            res.status(404).send(null);
     }
 }
