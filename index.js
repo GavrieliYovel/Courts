@@ -7,13 +7,19 @@ const { courtsRouter } = require("./routers/courtsRouter");
 const {gamesRouter} = require("./routers/gamesRouter");
 const {teamsRouter} = require("./routers/teamsRouter");
 const {reportsRouter} = require("./routers/reportsRouter");
+const session = require('express-session');
 
 const app = express();
 const port = process.env.PORT || 3030;
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
-
+app.use(session({
+    secret: process.env.SESSION_KEY,
+    resave: false,
+    saveUninitialized: true,
+    cookie: { secure: true }
+}));
 app.use('/users', usersRouter);
 app.use('/courts', courtsRouter);
 app.use('/games', gamesRouter);
