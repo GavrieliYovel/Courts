@@ -51,8 +51,7 @@ module.exports = {
     },
 
     createTeam : async(req,res) => {
-      const {newTeamData} =  req.body;
-      const newTeam = DAL.createTeam(newTeamData);
+      const newTeam = await DAL.createTeam(req.body);
       if (newTeam)
           res.status(200).send(newTeam);
       else
@@ -70,7 +69,7 @@ module.exports = {
 
     deleteTeam : async (req,res) => {
         const {teamID} = req.body;
-        const deletedTeam = DAL.deleteTeam(teamID);
+        const deletedTeam = await DAL.deleteTeam(teamID);
         if(deletedTeam)
             res.status(200).send(deletedTeam);
         else

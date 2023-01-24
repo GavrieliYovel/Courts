@@ -1,5 +1,6 @@
 const DAL = require('../DAL');
 const {mongoose} = require("mongoose");
+const bcrypt = require("bcrypt");
 
 async function getUserByMail(req, res) {
     const user = await DAL.getUserByEmail(req.email);
@@ -63,6 +64,20 @@ exports.usersDbController = {
             return getUserByMail(req,res);
         }
     },
+    async login(req, res)  {
+        const user = await DAL.getUserByEmail(req.body.email);
+        if(user) {
+            const result = await bcrypt.compare(req.body.password, user.password);
+            if(result) {
+                req.session.user = user;
+                res.send(user);
+            } else {
+                res.send(null);
+            }
+        } else {
+            res.status(404).send('user not found')
+        }
+    },
     incUserRank : async (req, res) => {
         const updatedUser = DAL.increaseUserRank(req.params.id);
         if(updatedUser)
@@ -72,5 +87,6 @@ exports.usersDbController = {
     decUserRank : async (req, res) => {
 
     }
+
 
 }

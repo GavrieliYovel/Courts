@@ -54,13 +54,13 @@ getAllUsers = async () => {
     return User.find({}).populate({path: "supervisedCourt", model: "Court"});
 }
 createUser = async (newUserData) => {
-    const newUser = User(newUserData);
+    const newUser = new User(newUserData);
     switch (newUser.type.toLowerCase()) {
         case "player":
             newUser.rank = 1;
             break;
         case "admin":
-            newUser.supervisedCourt = null;
+            newUser.supervisedCourt = newUserData.supervisedCourt;
             break;
         default:
             return null;
@@ -244,7 +244,10 @@ teamExists = async (teamId) =>{
     return Team.exists({_id: teamId});
 }
 getAllTeams = async () => {
-    return Team.find({});
+    return Team.find({}).populate({
+        path: 'players',
+        model: "User"
+    });
 }
 
 getTeamByTeamId = async (teamId) =>{
@@ -263,7 +266,7 @@ getTeamsByPlayerId = async (playerId) => {
 
 createTeam = async (newTeamData) =>{
     const newTeam = new Team(newTeamData);
-    return await  newTeam.save();
+    return await newTeam.save();;
 }
 
 addPlayerToTeam  = async (teamId, newPlayerId) =>{

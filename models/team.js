@@ -3,9 +3,9 @@ const {User} = require("./user");
 const {Court} = require ("./court");
 
 const teamSchema = new Schema({
-
+    name: String,
     players: {
-        type: [{type: mongoose.Types.ObjectId, ref: 'User'}],
+        type: [{type: mongoose.Types.ObjectId, ref: 'users'}],
         validate: {
             validator: (players)=> {
                 players.length > 0 && players.forEach((player) => User.exists({_id: player}) );
