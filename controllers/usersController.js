@@ -66,6 +66,7 @@ exports.usersDbController = {
     },
     async login(req, res)  {
         const user = await DAL.getUserByEmail(req.body.email);
+        console.log(user)
         if(user) {
             const result = await bcrypt.compare(req.body.password, user.password);
             if(result) {
