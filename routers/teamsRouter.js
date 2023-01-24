@@ -7,8 +7,8 @@ teamsRouter.get("/", teamsController.getAllTeams);
 teamsRouter.get("/:id", teamsController.getByIdRouter);
 teamsRouter.put("/player/:teamid/:playerid", teamsController.addPlayerToTeam);
 teamsRouter.delete("/player/:teamid/:playerid", teamsController.deletePlayerFromTeam);
-teamsRouter.put("/", teamsController.editTeam);
-teamsRouter.post("/", teamsController.createTeam);
+teamsRouter.put("/edit", teamsController.editTeam);
+teamsRouter.post("/new", teamsController.createTeam);
 teamsRouter.delete("/", teamsController.deleteTeam);
 
 

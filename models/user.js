@@ -10,7 +10,7 @@ const userSchema = new Schema({
     address: {type: String, require: true},
     type: {type: String, require: true},
     rank: Number,
-    supervisedCourt: {type: [ mongoose.Types.ObjectId ], ref: "courts", unique: true }
+    supervisedCourt: {type: [ mongoose.Types.ObjectId ], ref: "courts", unique: false}
 }, {collection: 'users', versionKey: false})
 
 userSchema.pre('save', function (next) {
