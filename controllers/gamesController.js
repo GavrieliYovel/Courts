@@ -40,7 +40,7 @@ exports.gamesDbController = {
         const games = await DAL.getGamesBetweenHours(moment(req.body.gameData).toDate(), moment(req.body.endData).toDate(), req.body.courtID);
         console.log(games.length);
         //const rank = await DAL.getUserRank(req.body.userID);
-        
+
         if(games.length === 0) {
             const newGame = await DAL.createGame(req.body);
             if (newGame)
@@ -56,7 +56,8 @@ exports.gamesDbController = {
     },
     async editGame(req, res) {
         const {gameID, newGameData} = req.body;
-        const updatedGame = await DAL.editUser(gameID, newGameData);
+        console.log({ newGameData });
+        const updatedGame = await DAL.editGame(gameID, newGameData);
         if (updatedGame)
             res.status(200).send(updatedGame);
         else
