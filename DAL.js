@@ -8,7 +8,9 @@ const {Team} = require('./models/team');
 //          Courts
 //##############################
 getAllCourts = async () => {
-    return Court.find({}).populate({path: "supervisor", model: "User"});
+    return Court.find({})
+        .populate({path: "supervisor", model: "User"})
+        .populate({path: "games", model: "Game"});
 }
 
 getCourtByID = async (courtID) => {
@@ -105,7 +107,7 @@ gameExists = async (id) =>{
 }
 
 getAllGames = async () => {
-    return Game.find({}).populate({path: "players", model: "User"}).populate({path: "court", model: "Court"});
+    return Game.find({}).populate({path: "creator", model: "User"}).populate({path: "court", model: "Court"});
 }
 
 // getGamesByPlayerID = async (playerID) => {
@@ -122,15 +124,16 @@ getGameByTeamPlayerId = async(teamPlayerId) =>{
 
 
 getGameByID = async (gameID) => {
-    return Game.findById(gameID).populate({path: "players", model: "User"}).populate({
+    return Game.findById(gameID).populate({path: "creator", model: "User"}).populate({
         path: "court",
         model: "Court"
     });
 }
 createGame = async (newGameData) => {
     const newGame = new Game(newGameData);
-    return await newGame.save();
-
+    const game = await newGame.save();
+    await Court.findByIdAndUpdate(game.court, {$push: {games: game._id}}, {safe: true});
+    return game;
 }
 editGame = async (gameToEditID, editedGameData) => {
     return Game.findByIdAndUpdate(gameToEditID, editedGameData, {new: true});

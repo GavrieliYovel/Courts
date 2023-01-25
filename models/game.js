@@ -14,13 +14,12 @@ const gameSchema = new Schema({
             },
             message :  invalidCourt =>`${invalidCourt} is not a valid court`
         },
-        required: true,
-        unique: true
+        required: true
     },
     scope: {type: String, require: true},
     gameDate: {type: Date, require: true},
     endDate: {type: Date, require: true},
-    team: {type: mongoose.Types.ObjectId  , ref: "teams" , unique: true, require: true},
+    team: {type: mongoose.Types.ObjectId  , ref: "teams"},
 
 }, {collection: 'games', versionKey: false})
 
