@@ -23,7 +23,9 @@ module.exports = {
     getAllTeams : async (req,res) =>{
         res.status(200).send(await DAL.getAllTeams());
     },
-
+    getTeamsNoPlayer : async (req,res) =>{
+        res.status(200).send( await DAL.getTeamsNoPlayer(req.params.id))
+    },
     getByIdRouter : async (req,res) =>{
         if (await DAL.teamExists(req.params.id))
          return getTeamByTeamId(req, res);

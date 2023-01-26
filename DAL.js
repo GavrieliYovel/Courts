@@ -274,7 +274,12 @@ getTeamsByPlayerId = async (playerId) => {
         model: "User"
     });
 }
-
+getTeamsNoPlayer = async(playerId) =>{
+    return Team.find({"players" : {"$ne" : playerId} }).populate({
+        path: 'players',
+        model: "User"
+    });
+}
 
 createTeam = async (newTeamData) =>{
     const newTeam = new Team(newTeamData);
@@ -296,6 +301,7 @@ deleteTeam = async (teamId) => {
 editTeam = async (teamId, newTeamData) =>{
     return Team.findByIdAndUpdate(teamId, newTeamData, {new: true});
 }
+
 
 
 module.exports = {
@@ -346,5 +352,6 @@ module.exports = {
     decreaseUserRank,
     increaseUserRank,
     getUserRank,
-    addPlayerToGame
+    addPlayerToGame,
+    getTeamsNoPlayer
 }
