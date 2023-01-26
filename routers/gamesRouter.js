@@ -5,7 +5,7 @@ const gamesRouter = new Router();
 
 gamesRouter.get('/', gamesDbController.getAllGames);
 gamesRouter.get('/:id', gamesDbController.getByIdRouter);
-gamesRouter.get('/date', gamesDbController.getGameByDate);
+gamesRouter.get('/date/:date/:courtID', gamesDbController.getGameByDate);
 gamesRouter.post('/new', gamesDbController.createGame);
 gamesRouter.put('/edit', gamesDbController.editGame);
 gamesRouter.delete('/', gamesDbController.deleteGame);

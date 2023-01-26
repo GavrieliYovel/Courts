@@ -3,6 +3,7 @@ const {Game} = require('./models/game');
 const {Report} = require('./models/report');
 const {User} = require('./models/user');
 const {Team} = require('./models/team');
+const moment = require("moment");
 
 //##############################
 //          Courts
@@ -148,13 +149,21 @@ addCourtToGame = async (gameID, courtID) => {
 }
 
 getGamesByDate = async (date, courtID) => {
-    return Game.find({gameDate: date, court: courtID});
+    const startOfDay = moment(date).startOf('day').toDate();
+    const endOfDay = moment(date).endOf('day').toDate();
+    return Game.find({
+        gameDate: {
+            $gte: startOfDay,
+            $lte: endOfDay
+        },
+        court: courtID
+    });
 }
 
 getGamesBetweenHours = async (startDate, endDate, courtID) => {
     return Game.find({
         gameDate: { $gte: startDate},
-        end: { $lte: endDate},
+        endDate: { $lte: endDate},
         court: courtID
     });
 }

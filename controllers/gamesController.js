@@ -106,8 +106,10 @@ exports.gamesDbController = {
             res.status(404).send(null);
     },
     async getGameByDate(req, res) {
-        const {date, courtID} = req.query;
-        const games = await DAL.getGamesByDate(moment(date).toDate(), courtID);
+        const {date, courtID} = req.params;
+        // console.log("date " + date);
+        // console.log("moment date " + moment(date).format("YYYY-MM-DDTHH:mm:ss"));
+        const games = await DAL.getGamesByDate(date, courtID);
         if(games)
             res.status(200).send(games);
         else
