@@ -51,7 +51,28 @@ module.exports = {
             res.status(404).send(null);
 
     },
-
+    addPlayersToTeam : async (req,res) => {
+        if(mongoose.Types.ObjectId.isValid(req.params.teamid)) {
+            const updatedTeam = await DAL.addPlayersToTeam(req.params.teamid, req.body.players);
+            if (updatedTeam)
+                res.status(200).send(updatedTeam);
+            else
+                res.status(404).send(null);
+        }
+        else
+            res.status(404).send(null);
+    },
+    deletePlayersFromTeam : async (req,res) => {
+        if(mongoose.Types.ObjectId.isValid(req.params.teamid)) {
+            const updatedTeam = await DAL.deletePlayersFromTeam(req.params.teamid, req.body.players);
+            if (updatedTeam)
+                res.status(200).send(updatedTeam);
+            else
+                res.status(404).send(null);
+        }
+        else
+            res.status(404).send(null);
+    },
     createTeam : async(req,res) => {
       const newTeam = await DAL.createTeam(req.body);
       if (newTeam)
