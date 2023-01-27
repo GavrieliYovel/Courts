@@ -87,6 +87,17 @@ exports.usersDbController = {
 
     decUserRank : async (req, res) => {
 
+    },
+    async allUsers(req,res){
+        if(mongoose.Types.ObjectId.isValid(req.params.id)) {
+            const users = await DAL.allUsers(req.params.id);
+            if (users)
+                res.status(200).send(users);
+            else
+                res.status(404).send(null);
+        }
+        else
+            res.status(404).send(null);
     }
 
 

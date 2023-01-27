@@ -9,5 +9,6 @@ usersRouter.post('/new', usersDbController.createUser );
 usersRouter.put('/edit', usersDbController.editUser );
 usersRouter.delete('/', usersDbController.deleteUser );
 usersRouter.post('/login', usersDbController.login);
+usersRouter.get('/all/:id', usersDbController.allUsers);
 
 module.exports = { usersRouter };
