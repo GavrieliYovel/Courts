@@ -99,6 +99,11 @@ getUserRank = async (userID) => {
     return user.rank;
 }
 
+allUsers = async (userID) => {
+    let users= await User.find({_id: {$ne: userID}});
+    return users;
+}
+
 //##############################
 //          Game
 //##############################
@@ -294,6 +299,14 @@ deletePlayerFromTeam = async (teamId, deletePlayerId) => {
     return Team.findByIdAndUpdate(teamId,{$pull: {players: deletePlayerId}}, {safe: true, new: true});
 }
 
+addPlayersToTeam  = async (teamId, newPlayersId) =>{
+    return Team.findByIdAndUpdate(teamId, {$push: {players: { $each: newPlayersId}}}, {safe: true, new: true});
+}
+
+deletePlayersFromTeam = async (teamId, deletePlayersId) => {
+    return Team.findByIdAndUpdate(teamId,{$pull: {players: {$in:deletePlayersId}}}, {safe: true, new: true});
+}
+
 deleteTeam = async (teamId) => {
     return Team.findByIdAndDelete(teamId);
 }
@@ -321,6 +334,7 @@ module.exports = {
     getUserByID,
     editUser,
     deleteUser,
+    allUsers,
     getAllGames,
     getGameByTeamPlayerId,
     getGameByID,
@@ -344,6 +358,8 @@ module.exports = {
     createTeam,
     addPlayerToTeam,
     deletePlayerFromTeam,
+    addPlayersToTeam,
+    deletePlayersFromTeam,
     deleteTeam,
     editTeam,
     getGamesByDate,
