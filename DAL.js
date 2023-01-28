@@ -11,7 +11,8 @@ const moment = require("moment");
 getAllCourts = async () => {
     return Court.find({})
         .populate({path: "supervisor", model: "User"})
-        .populate({path: "games", model: "Game"});
+        .populate({path: "games", model: "Game"})
+        .populate({path: 'games', populate: {path: 'team'},model: "Game"});
 }
 
 getCourtByID = async (courtID) => {
