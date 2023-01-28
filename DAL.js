@@ -126,7 +126,7 @@ getAllGames = async () => {
 
 
 getGameByTeamPlayerId = async(teamPlayerId) =>{
-    return  Game.find({'team.players' : teamPlayerId});
+    return  Game.find({'team.players' : teamPlayerId}).populate({path: "court", model: "Court"}).populate({path: "team"});
 }
 
 
@@ -134,7 +134,7 @@ getGameByID = async (gameID) => {
     return Game.findById(gameID).populate({path: "creator", model: "User"}).populate({
         path: "court",
         model: "Court"
-    });
+    }).populate({path: "team"});
 }
 createGame = async (newGameData) => {
     const newGame = new Game(newGameData);
