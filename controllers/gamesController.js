@@ -47,7 +47,6 @@ exports.gamesDbController = {
                 res.status(200).send(newGame);
             else
                 res.status(404).send(null);
-            res.send(games)
         } else {
             if(games.length > 0)
                 res.status(404).send('there is a game scheduled at this time');
