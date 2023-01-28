@@ -168,11 +168,35 @@ getGamesByDate = async (date, courtID) => {
 
 getGamesBetweenHours = async (startDate, endDate, courtID) => {
     return Game.find({
-        gameDate: { $gte: startDate},
-        endDate: { $lte: endDate},
-        court: courtID
+        $or:[
+            {
+                $and: [
+                    {gameDate: { $lte: startDate}},
+                    {endDate: { $gte: startDate}},
+                    {court: courtID}
+                ]
+            },
+            {
+                $and: [
+                    {gameDate: { $lte: endDate}},
+                    {endDate: { $gte: endDate}},
+                    {court: courtID}
+                ]
+            },
+            {
+                $and: [
+                    {gameDate: { $gte: startDate}},
+                    {endDate: { $lte: endDate}},
+                    {court: courtID}
+                ]
+            }
+
+        ]
+
     });
 }
+//14:10-14:45
+//14:00-15:00
 
 // addPlayerToGame = async (gameID, playerID) => {
 //     return Game.findByIdAndUpdate(gameID, {$push: {players: playerID}}, {safe: true, new: true});

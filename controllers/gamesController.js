@@ -37,9 +37,9 @@ exports.gamesDbController = {
     },
 
     async createGame(req, res) {
-        const games = await DAL.getGamesBetweenHours(moment(req.body.gameDate).toDate(), moment(req.body.endDate).toDate(), req.body.courtID);
-        console.log(games.length);
-        //const rank = await DAL.getUserRank(req.body.userID);
+
+        const games = await DAL.getGamesBetweenHours(req.body.gameDate,req.body.endDate, req.body.court);
+        // //const rank = await DAL.getUserRank(req.body.userID);
 
         if(games.length === 0) {
             const newGame = await DAL.createGame(req.body);
@@ -47,6 +47,7 @@ exports.gamesDbController = {
                 res.status(200).send(newGame);
             else
                 res.status(404).send(null);
+            res.send(games)
         } else {
             if(games.length > 0)
                 res.status(404).send('there is a game scheduled at this time');
