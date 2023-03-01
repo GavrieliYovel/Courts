@@ -56,7 +56,6 @@ exports.gamesDbController = {
     },
     async editGame(req, res) {
         const {gameID, newGameData} = req.body;
-        console.log({ newGameData });
         const updatedGame = await DAL.editGame(gameID, newGameData);
         if (updatedGame)
             res.status(200).send(updatedGame);
